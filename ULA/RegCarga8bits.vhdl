@@ -72,8 +72,6 @@ begin
 end architecture;
 
 
-
---Reg Carga 8 bits
 library ieee;
 use ieee.std_logic_1164.all;
     entity regCarga8bits is
@@ -168,51 +166,106 @@ begin
 end architecture;
 
   -- FFD
-  
+
 library ieee;
-use ieee.std_logic_1164.all;
-    entity ffd is
+use ieee.std_logic_1164.all; -- std_logic para detectar erros
+
+entity ffd is
+    port(
+        d      : in std_logic;
+        clk    : in std_logic;
+        pr, cl : in std_logic;
+        q, nq  : out std_logic
+    );
+end entity;
+
+architecture latch of ffd is
+    component ffjk is
         port(
-            d : in std_logic;
-            clk : in std_logic;
+            j, k   : in std_logic;
+            clk    : in std_logic;
             pr, cl : in std_logic;
-            q, nq : out std_logic
+            q, nq  : out std_logic
         );
-    end ffd;
-architecture ff of ffd is
-    signal s_snj , s_snk : std_logic;
-    signal s_sns , s_snr : std_logic;
-    signal s_sns2, s_snr2 : std_logic;
-    signal s_eloS, s_eloR : std_logic;
-    signal s_eloQ, s_elonQ: std_logic;
-    signal s_nClock : std_logic;
+    end component;
+
+    signal sq  : std_logic := '0'; -- opcional -> valor inicial
+    signal snq : std_logic := '1';
+    signal nj  : std_logic;
 begin
-    s_nClock <= not(clk);
-    -- envio de saídas de NAND para Q e NQ
-    q <= s_eloQ;
-    nq <= s_elonQ;
-    -- s_snj
-    -- NAND de 3 entradas? Faça not( X and Y and Z)
-    s_snj <=  not(d and clk and s_elonQ);
-    -- s_snk
-    s_snk <= not(not(d) and clk and s_eloQ);
-    -- s_sns
-    s_sns <= not(pr and s_snj and s_eloR);
-    -- s_snr
-    s_snr <= not(cl and s_snk and s_eloS);
-    -- s_sns2
-    s_sns2 <= s_sns nand s_nClock;
-    -- s_snr2
-    s_snr2 <= s_snr nand s_nClock;
-    -- s_eloS
-    s_eloS <= s_sns;
-    -- s_eloR
-    s_eloR <= s_snr;
-    -- s_eloQ
-    s_eloQ <= not(pr and s_sns2 and s_elonQ);
-    -- s_elonQ
-    s_elonQ <= not(s_eloQ and s_snr2 and cl);
-    
-    
-end architecture ff;
+
+    u_td : ffjk port map(d, nj, clk, pr, cl, q, nq);
+    nj <= not(d);
+
+end architecture latch;
+
+
+
+library ieee;
+use ieee.std_logic_1164.all; -- std_logic para detectar erros
+
+entity ffjk is
+    port(
+        j, k   : in std_logic;
+        clk    : in std_logic;
+        pr, cl : in std_logic;
+        q, nq  : out std_logic
+    );
+end entity;
+
+architecture latch of ffjk is
+    signal sq  : std_logic := '0'; -- opcional -> valor inicial
+    signal snq : std_logic := '1';
+begin
+
+    q  <= sq;
+    nq <= snq;
+
+    u_ff : process (clk, pr, cl)
+    begin
+        -- pr = 0 e cl = 0 -> Desconhecido
+        if (pr = '0') and (cl = '0') then
+            sq  <= 'X';
+            snq <= 'X';
+            -- prioridade para cl
+            elsif (pr = '1') and (cl = '0') then
+                sq  <= '0';
+                snq <= '1';
+                -- tratamento de pr
+                elsif (pr = '0') and (cl = '1') then
+                    sq  <= '1';
+                    snq <= '0';
+                    -- pr e cl desativados
+                    elsif (pr = '1') and (cl = '1') then
+                        if falling_edge(clk) then
+                            -- jk = 00 -> mantém estado
+                            if    (j = '0') and (k = '0') then
+                                sq  <= sq;
+                                snq <= snq;
+                            -- jk = 01 -> q = 0
+                            elsif (j = '0') and (k = '1') then
+                                sq  <= '0';
+                                snq <= '1';
+                            -- jk = 01 -> q = 1
+                            elsif (j = '1') and (k = '0') then
+                                sq  <= '1';
+                                snq <= '0';
+                            -- jk = 11 -> q = !q
+                            elsif (j = '1') and (k = '1') then
+                                sq  <= not(sq);
+                                snq <= not(snq);
+                            -- jk = ?? -> falha
+                            else
+                                sq  <= 'U';
+                                snq <= 'U';
+                            end if;
+                        end if;
+            else
+                sq  <= 'X';
+                snq <= 'X';
+        end if;
+    end process;
+
+end architecture;
+
 
