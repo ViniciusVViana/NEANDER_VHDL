@@ -1,3 +1,79 @@
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+ENTITY tb_regCarga8bits IS
+END tb_regCarga8bits;
+
+architecture arch of tb_regCarga8bits is
+    
+    component regCarga8bits is
+        port(
+            d : in std_logic_vector(7 downto 0);
+            clk : in std_logic;
+            pr, cl : in std_logic;
+            nrw : in std_logic;
+            s : out std_logic_vector(7 downto 0)
+        );
+    end component;
+
+    signal sD, sS: std_logic_vector(7 downto 0);
+    signal sPr,sCl, sNrw: std_logic;
+
+    constant CLK_PERIOD : time := 20 ns;
+    signal sClk : std_logic := '1';
+
+begin
+    u_regCarga8bits: regCarga8bits port map(sD,sClk, sPr,sCl, sNrw, sS);
+    
+    u_teste: process
+    begin
+        
+        sPr <= '1';
+        sCl <= '0';
+        sD <= "11110000";
+        sNrw <= '1';
+        wait for CLK_PERIOD;
+
+        sPr <= '1';
+        sCl <= '1';
+        sD <= "11110000";
+        sNrw <= '1';
+        wait for CLK_PERIOD;
+
+        sPr <= '1';
+        sCl <= '1';
+        sD <= "11110000";
+        sNrw <= '0';
+
+        wait for CLK_PERIOD;
+
+        sPr <= '1';
+        sCl <= '1';
+        sD <= "00001111";
+        sNrw <= '1';
+        wait for CLK_PERIOD;
+
+        sPr <= '1';
+        sCl <= '1';
+        sD <= "00001111";
+        sNrw <= '0';
+
+        wait for CLK_PERIOD;
+    
+    wait;
+    end process;
+
+     -- process para Clock
+    tbp1 : process
+    begin
+        sClk <= not(sClk);
+        wait for CLK_PERIOD/2;
+    end process;
+
+end architecture;
+
+
+
+--Reg Carga 8 bits
 library ieee;
 use ieee.std_logic_1164.all;
     entity regCarga8bits is
