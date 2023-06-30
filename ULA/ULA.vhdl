@@ -131,14 +131,14 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 ENTITY Flags IS
     PORT (
-        d : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        F_datain : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         clk : IN STD_LOGIC;
         pr, cl : IN STD_LOGIC;
         nrw : IN STD_LOGIC;
-        s : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+        F_dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY;
-ARCHITECTURE reg8bit OF Flags IS
+ARCHITECTURE arch_flags OF Flags IS
     COMPONENT regCarga1bit IS
         PORT (
             d : IN STD_LOGIC;
@@ -151,7 +151,7 @@ ARCHITECTURE reg8bit OF Flags IS
 BEGIN
     -- instâncias de regCarga1bit (8 vezes)
     loop_reg : FOR i IN 0 TO 1 GENERATE
-        u_reg1bit : regCarga1bit PORT MAP(d(i), clk, pr, cl, nrw, s(i));
+        u_reg1bit : regCarga1bit PORT MAP(F_datain(i), clk, pr, cl, nrw, F_dataout(i));
     END GENERATE loop_reg;
 END ARCHITECTURE;
 -- Registrador AC
@@ -159,14 +159,14 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 ENTITY AC IS
     PORT (
-        datain : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        AC_dataout : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         clk : IN STD_LOGIC;
         pr, cl : IN STD_LOGIC;
         nrw : IN STD_LOGIC;
-        dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+        AC_dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
 END ENTITY;
-ARCHITECTURE reg8bit OF AC IS
+ARCHITECTURE arch_ac OF AC IS
     COMPONENT regCarga1bit IS
         PORT (
             d : IN STD_LOGIC;
@@ -179,6 +179,6 @@ ARCHITECTURE reg8bit OF AC IS
 BEGIN
     -- instâncias de regCarga1bit (8 vezes)
     loop_reg : FOR i IN 0 TO 7 GENERATE
-        u_reg1bit : regCarga1bit PORT MAP(d(i), clk, pr, cl, nrw, s(i));
+        u_reg1bit : regCarga1bit PORT MAP(AC_datain(i), clk, pr, cl, nrw, AC_dataout(i));
     END GENERATE loop_reg;
 END ARCHITECTURE;
