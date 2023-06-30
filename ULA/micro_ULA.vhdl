@@ -1,58 +1,3 @@
--- tb_ULA
-library ieee;
-use ieee.std_logic_1164.all;
-entity tb is 
-end entity;
-
-architecture arch of tb is
-    
-component micro_ULA is
-    port(
-        x_ULA: in std_logic_vector(7 downto 0);
-        y_ULA: in std_logic_vector(7 downto 0);
-        op_ULA: in std_logic_vector(2 downto 0);
-        s_ac2flags: out std_logic_vector(1 downto 0); --Saida NZ
-        s_ula2ac: out std_logic_vector(7 downto 0)
-    );
-
-end component;
-    signal x,y,s: std_logic_vector(7 downto 0);
-    signal snz: std_logic_vector(1 downto 0);
-    signal op: std_logic_vector(2 downto 0);
-begin
-    u_test: micro_ULA port map(x,y,op,snz,s);
-
-    u_main: process 
-    begin
-        x <= x"01";
-        y <= x"04";
-        op <= "000";
-        wait for 20 ns;
-        x <= x"01";
-        y <= x"04";
-        op <= "001";
-        wait for 20 ns;
-        x <= x"01";
-        y <= x"04";
-        op <= "010";
-        wait for 20 ns;
-        x <= x"01";
-        y <= x"04";
-        op <= "011";
-        wait for 20 ns;
-        x <= x"01";
-        y <= x"04";
-        op <= "100";
-        wait for 20 ns;
-
-    
-    wait;
-    end process;
-    
-    
-    
-end architecture arch;
-
 --Micro_ALU
 
 library ieee;
@@ -195,9 +140,11 @@ architecture arch_somador of somador_8bits is
     signal aux : std_logic_vector(7 downto 0);
 
 begin
-    loop_sum: for i in 0 to 7 generate
-        u_somador1 : somador_1bit port map(canal_a => x_sum(i), canal_b => y_sum(i), canal_cin => canal_cinn, canal_cout => aux(i), saida_soma => s_add(i));
-    end generate loop_sum;
+    u_somador1 : somador_1bit port map(canal_a => x_sum(0), canal_b => y_sum(0), canal_cin => canal_cinn, canal_cout => aux(0), saida_soma => s_add(0));
+    
+    loop_sum: FOR i IN 1 TO 7 GENERATE
+        u_sum2 : somador_1bit port map(canal_a => x_sum(i), canal_b => y_sum(i), canal_cin => aux(i-1), canal_cout => aux(i), saida_soma => s_add(i));
+    END GENERATE loop_sum;
 end architecture;
 
 --Somador 1 bit
