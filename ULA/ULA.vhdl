@@ -5,7 +5,7 @@ ENTITY testbanch IS
 END ENTITY;
 
 ARCHITECTURE testbanch_arch OF testbanch IS
-    constant CLK_PERIOD : time := 20 ns;
+    CONSTANT CLK_PERIOD : TIME := 20 ns;
 
     COMPONENT ULA IS
         PORT (
@@ -29,38 +29,36 @@ ARCHITECTURE testbanch_arch OF testbanch IS
 BEGIN
     u_ULA : ULA PORT MAP(s_interface_barramento, s_ULA_op, s_AC_rw, s_interface_flags, s_mem_nrw, s_rst, s_clk);
 
-    u_teste: process
-    begin
+    u_teste : PROCESS
+    BEGIN
         s_rst <= '0';
-        wait for CLK_PERIOD;
+        WAIT FOR CLK_PERIOD;
         s_rst <= '1';
         s_interface_barramento <= "00000000";
         s_ULA_op <= "000";
         s_AC_rw <= '0';
         s_mem_nrw <= '0';
-        wait for CLK_PERIOD;
-        
+        WAIT FOR CLK_PERIOD;
+
         s_interface_barramento <= "00000001";
         s_ULA_op <= "001";
         s_AC_rw <= '1';
         s_mem_nrw <= '1';
-        wait for CLK_PERIOD;
+        WAIT FOR CLK_PERIOD;
 
         s_interface_barramento <= "00000010";
         s_ULA_op <= "010";
         s_AC_rw <= '0';
         s_mem_nrw <= '0';
-        wait for CLK_PERIOD;
+        WAIT FOR CLK_PERIOD;
 
-        wait;
-    end process;
-
-
-    u_clk : process
-    begin
-        s_clk <= not(s_clk);
-        wait for CLK_PERIOD/2;
-    end process;
+        WAIT;
+    END PROCESS;
+    u_clk : PROCESS
+    BEGIN
+        s_clk <= NOT(s_clk);
+        WAIT FOR CLK_PERIOD/2;
+    END PROCESS;
 END ARCHITECTURE;
 
 -- ULA 8 bits Grande
@@ -92,11 +90,11 @@ ARCHITECTURE ULA_arch OF ULA IS
 
     COMPONENT Flags IS
         PORT (
-            F_datain : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+            F_datain : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
             clk : IN STD_LOGIC;
             pr, cl : IN STD_LOGIC;
             nrw : IN STD_LOGIC;
-            F_dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+            F_dataout : OUT STD_LOGIC_VECTOR(1 DOWNTO 0)
         );
     END COMPONENT;
 
@@ -117,12 +115,12 @@ ARCHITECTURE ULA_arch OF ULA IS
 
 BEGIN
     s_pr <= '1';
+
+    u_ac : AC PORT MAP(s_ula2ac, clk, s_pr, rst, AC_rw, barramento);
     barramento <= s_ac2ula WHEN mem_nrw = '1' ELSE
         (OTHERS => 'Z');
-
-    u_ula : micro_ULA PORT MAP(s_ac2ula, barramento, s_ULA_op, s_ac2flags, s_ula2ac);
-    u_flags : Flags PORT MAP(s_ac2flags, s_clk, s_pr, s_rst, s_nrw, s_interface_flags);
-    u_ac : AC PORT MAP(s_ula2ac, s_clk, s_pr, s_rst, s_nrw, barramento);
+    u_ula : micro_ULA PORT MAP(s_ac2ula, barramento, ULA_op, s_ac2flags, s_ula2ac);
+    u_flags : Flags PORT MAP(s_ac2flags, clk, s_pr, rst, AC_rw, s_interface_flags);
 
 END ULA_arch; -- ULA_arch
 
@@ -131,11 +129,11 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 ENTITY Flags IS
     PORT (
-        F_datain : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        F_datain : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
         clk : IN STD_LOGIC;
         pr, cl : IN STD_LOGIC;
         nrw : IN STD_LOGIC;
-        F_dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
+        F_dataout : OUT STD_LOGIC_VECTOR(1 DOWNTO 0)
     );
 END ENTITY;
 ARCHITECTURE arch_flags OF Flags IS
@@ -159,7 +157,7 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 ENTITY AC IS
     PORT (
-        AC_dataout : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
+        AC_datain : IN STD_LOGIC_VECTOR(7 DOWNTO 0);
         clk : IN STD_LOGIC;
         pr, cl : IN STD_LOGIC;
         nrw : IN STD_LOGIC;
