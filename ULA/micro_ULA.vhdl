@@ -143,21 +143,18 @@ begin
     
 end architecture arch_ULA;
 -- Detector NZ
-
 library ieee;
 use ieee.std_logic_1164.all;
-
-entity DetectorNZ is
-   port(
-    datain : in std_logic_vector(7 downto 0);
-    NZ : out std_logic_vector(1 downto 0)
-   );
+entity Detectornz is
+    port(
+        datain : in std_logic_vector(7 downto 0);
+        NZ : out std_logic_vector(1 downto 0)
+    );
 end entity;
-
-architecture Detector of DetectorNZ is
-begin
-    NZ(1) <= '1' when datain(7) = '1';
-    NZ(0) <= '1' when datain = "00000000";
+architecture Detector of Detectornz is
+    begin
+        NZ(1) <= '1' when datain(7) = '1' else '0';
+        NZ(0) <= '1' when datain = "00000000" else '0';
 end architecture;
 
 -- Somador 8 Bits
