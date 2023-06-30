@@ -1,70 +1,7 @@
---Testbanch
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
-ENTITY testbanch IS
-END ENTITY;
-
-ARCHITECTURE testbanch_arch OF testbanch IS
-    CONSTANT CLK_PERIOD : TIME := 20 ns;
-
-    COMPONENT ULA IS
-        PORT (
-            interface_barramento : INOUT STD_LOGIC_VECTOR(7 DOWNTO 0);
-            ULA_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
-            AC_rw : IN STD_LOGIC;
-            interface_flags : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
-            mem_nrw : IN STD_LOGIC;
-            rst, clk : IN STD_LOGIC
-        );
-    END COMPONENT;
-
-    SIGNAL s_interface_barramento : STD_LOGIC_VECTOR(7 DOWNTO 0);
-    SIGNAL s_ULA_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL s_AC_rw : STD_LOGIC;
-    SIGNAL s_interface_flags : STD_LOGIC_VECTOR(1 DOWNTO 0);
-    SIGNAL s_mem_nrw : STD_LOGIC;
-    SIGNAL s_rst : STD_LOGIC;
-    SIGNAL s_clk : STD_LOGIC := '1';
-
-BEGIN
-    u_ULA : ULA PORT MAP(s_interface_barramento, s_ULA_op, s_AC_rw, s_interface_flags, s_mem_nrw, s_rst, s_clk);
-
-    u_teste : PROCESS
-    BEGIN
-        s_rst <= '0';
-        WAIT FOR CLK_PERIOD;
-        s_rst <= '1';
-        s_interface_barramento <= "00000000";
-        s_ULA_op <= "000";
-        s_AC_rw <= '0';
-        s_mem_nrw <= '0';
-        WAIT FOR CLK_PERIOD;
-
-        s_interface_barramento <= "00000001";
-        s_ULA_op <= "001";
-        s_AC_rw <= '1';
-        s_mem_nrw <= '1';
-        WAIT FOR CLK_PERIOD;
-
-        s_interface_barramento <= "00000010";
-        s_ULA_op <= "010";
-        s_AC_rw <= '0';
-        s_mem_nrw <= '0';
-        WAIT FOR CLK_PERIOD;
-
-        WAIT;
-    END PROCESS;
-    u_clk : PROCESS
-    BEGIN
-        s_clk <= NOT(s_clk);
-        WAIT FOR CLK_PERIOD/2;
-    END PROCESS;
-END ARCHITECTURE;
-
 -- ULA 8 bits Grande
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
-ENTITY ULA IS
+ENTITY moduloULA IS
     PORT (
         interface_barramento : INOUT STD_LOGIC_VECTOR(7 DOWNTO 0);
         ULA_op : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
@@ -75,7 +12,7 @@ ENTITY ULA IS
     );
 END ENTITY;
 
-ARCHITECTURE ULA_arch OF ULA IS
+ARCHITECTURE ULA_arch OF moduloULA IS
 
     COMPONENT micro_ULA IS
         PORT (
@@ -116,10 +53,10 @@ BEGIN
     s_pr <= '1';
 
     u_ac : AC PORT MAP(s_ula2ac, clk, s_pr, rst, AC_rw, s_ac2ula);
-    interface_barramento <= s_ac2ula WHEN mem_nrw = '1' ELSE
-        (OTHERS => 'Z');
+    
     u_ula : micro_ULA PORT MAP(s_ac2ula, interface_barramento, ULA_op, s_ac2flags, s_ula2ac);
     u_flags : Flags PORT MAP(s_ac2flags, clk, s_pr, rst, AC_rw, interface_flags);
+    interface_barramento <= s_ac2ula WHEN mem_nrw = '1' ELSE (OTHERS => 'Z');
 
 END ULA_arch; -- ULA_arch
 
@@ -147,9 +84,9 @@ ARCHITECTURE arch_flags OF Flags IS
     END COMPONENT;
 BEGIN
     -- instâncias de regCarga1bit (8 vezes)
-    loop_reg : FOR i IN 0 TO 1 GENERATE
-        u_reg1bit : regCarga1bit PORT MAP(F_datain(i), clk, pr, cl, nrw, F_dataout(i));
-    END GENERATE loop_reg;
+        u_reg1bit0 : regCarga1bit PORT MAP(F_datain(0), clk, cl, pr, nrw, F_dataout(0));
+        u_reg1bit1 : regCarga1bit PORT MAP(F_datain(1), clk, pr, cl, nrw, F_dataout(1));
+
 END ARCHITECTURE;
 -- Registrador AC
 LIBRARY ieee;
