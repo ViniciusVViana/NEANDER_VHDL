@@ -108,19 +108,18 @@ ARCHITECTURE ULA_arch OF ULA IS
         );
     END COMPONENT;
 
-    SIGNAL s_pr, s_clk, s_rst, s_nrw : STD_LOGIC;
+    SIGNAL s_pr : STD_LOGIC;
     SIGNAL s_ac2flags : STD_LOGIC_VECTOR(1 DOWNTO 0);
-    SIGNAL s_ULA_op : STD_LOGIC_VECTOR(2 DOWNTO 0);
-    SIGNAL s_ac2ula, s_ula2ac, barramento, s_interface_flags : STD_LOGIC_VECTOR(7 DOWNTO 0);
+    SIGNAL s_ac2ula, s_ula2ac : STD_LOGIC_VECTOR(7 DOWNTO 0);
 
 BEGIN
     s_pr <= '1';
 
-    u_ac : AC PORT MAP(s_ula2ac, clk, s_pr, rst, AC_rw, barramento);
-    barramento <= s_ac2ula WHEN mem_nrw = '1' ELSE
+    u_ac : AC PORT MAP(s_ula2ac, clk, s_pr, rst, AC_rw, s_ac2ula);
+    interface_barramento <= s_ac2ula WHEN mem_nrw = '1' ELSE
         (OTHERS => 'Z');
-    u_ula : micro_ULA PORT MAP(s_ac2ula, barramento, ULA_op, s_ac2flags, s_ula2ac);
-    u_flags : Flags PORT MAP(s_ac2flags, clk, s_pr, rst, AC_rw, s_interface_flags);
+    u_ula : micro_ULA PORT MAP(s_ac2ula, interface_barramento, ULA_op, s_ac2flags, s_ula2ac);
+    u_flags : Flags PORT MAP(s_ac2flags, clk, s_pr, rst, AC_rw, interface_flags);
 
 END ULA_arch; -- ULA_arch
 
