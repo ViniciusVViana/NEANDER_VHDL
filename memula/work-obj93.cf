@@ -1,0 +1,48 @@
+v 4
+file . "tb_NEANDER_00-ULA.vhdl" "1260c3aa16e71500f98d066ede35b4d3de48952e" "20230704232939.231":
+  entity tb_moduloula at 24( 1105) + 0 on 691;
+  architecture quickmath of tb_moduloula at 30( 1198) + 0 on 692;
+file . "as_ram.vhdl" "3f73ba77f28abe495e9836860db5e4964f04d021" "20230704232939.221":
+  entity as_ram at 2( 42) + 0 on 661;
+  architecture behavior of as_ram at 16( 325) + 0 on 662;
+file . "memoria.vhdl" "a33e9e032b4928be172d3d67ecf8299a6969ca48" "20230704232939.223":
+  entity memoria at 2( 20) + 0 on 663;
+  architecture decora of memoria at 16( 487) + 0 on 664;
+  entity regrem at 74( 2032) + 0 on 665;
+  architecture arch_ac of regrem at 85( 2335) + 0 on 666;
+  entity regrdm at 103( 2865) + 0 on 667;
+  architecture arch_ac of regrdm at 114( 3168) + 0 on 668;
+file . "micro_ULA.vhdl" "66545592036fa70d4315891e651ee0ceccaded92" "20230704232939.227":
+  entity micro_ula at 3( 13) + 0 on 669;
+  architecture arch_ula of micro_ula at 18( 373) + 0 on 670;
+  entity detectornz at 91( 2393) + 0 on 671;
+  architecture detector of detectornz at 99( 2582) + 0 on 672;
+  entity somador_8bits at 107( 2777) + 0 on 673;
+  architecture arch_somador of somador_8bits at 124( 3108) + 0 on 674;
+  entity somador_1bit at 151( 3900) + 0 on 675;
+  architecture somando_1bit of somador_1bit at 169( 4196) + 0 on 676;
+  entity and_8bits at 179( 4437) + 0 on 677;
+  architecture comportamento of and_8bits at 189( 4708) + 0 on 678;
+  entity or_8bits at 195( 4820) + 0 on 679;
+  architecture comportamento of or_8bits at 205( 5057) + 0 on 680;
+  entity inversor_8bits at 211( 5165) + 0 on 681;
+  architecture invertendo of inversor_8bits at 220( 5387) + 0 on 682;
+file . "regCarga1bit.vhdl" "a43e916c89346984f18dfa330e6b8fff0a93b503" "20230704232939.230":
+  entity regcarga1bit at 2( 21) + 0 on 683;
+  architecture reg1bit of regcarga1bit at 13( 295) + 0 on 684;
+  entity mux2x1 at 46( 1185) + 0 on 685;
+  architecture comutar of mux2x1 at 58( 1384) + 0 on 686;
+  entity ffd at 68( 1556) + 0 on 687;
+  architecture latch of ffd at 80( 1801) + 0 on 688;
+  entity ffjk at 102( 2270) + 0 on 689;
+  architecture latch of ffjk at 114( 2516) + 0 on 690;
+file . "tb_NEANDER_01-ULA_MEM.vhdl" "abb9321444bbb033e9d18e570d1755481aaeb151" "20230704232939.233":
+  entity tb_moduloulamem at 24( 1174) + 0 on 693;
+  architecture quickmath of tb_moduloulamem at 30( 1273) + 0 on 694;
+file . "ULA.vhdl" "49a06efb56d2c8bb1f62655c995c35b1eb375f9b" "20230704232939.235":
+  entity moduloula at 2( 21) + 0 on 695;
+  architecture ula_arch of moduloula at 15( 386) + 0 on 696;
+  entity flags at 64( 1891) + 0 on 697;
+  architecture arch_flags of flags at 75( 2172) + 0 on 698;
+  entity ac at 92( 2708) + 0 on 699;
+  architecture arch_ac of ac at 103( 2988) + 0 on 700;
