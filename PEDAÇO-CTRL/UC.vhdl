@@ -24,6 +24,7 @@ entity NOP is
         ciclo: in std_logic_vector(2 downto 0);
         NOP_out: out std_logic_vector(10 downto 0)
     );
+end entity;
 architecture arch of NOP is 
 begin
 
@@ -37,6 +38,8 @@ entity STA is
         ciclo: in std_logic_vector(2 downto 0);
         STA_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of STA is 
 begin
 
@@ -50,6 +53,8 @@ entity LDA is
         ciclo: in std_logic_vector(2 downto 0);
         LDA_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of LDA is 
 begin
 
@@ -63,6 +68,8 @@ entity ADD is
         ciclo: in std_logic_vector(2 downto 0);
         ADD_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of ADD is 
 begin
 
@@ -76,6 +83,8 @@ entity AND_UC is
         ciclo: in std_logic_vector(2 downto 0);
         AND_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of AND_UC is 
 begin
 
@@ -89,6 +98,8 @@ entity OR_UC is
         ciclo: in std_logic_vector(2 downto 0);
         OR_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of OR_UC is 
 begin
 
@@ -102,6 +113,8 @@ entity NOT_UC is
         ciclo: in std_logic_vector(2 downto 0);
         NOT_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of NOT_UC is 
 begin
 
@@ -115,6 +128,8 @@ entity NOT_UC is
         ciclo: in std_logic_vector(2 downto 0);
         NOT_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of NOT_UC is 
 begin
 
@@ -129,6 +144,8 @@ entity JMPS_UC is
         ciclo: in std_logic_vector(2 downto 0);
         JMPS_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of JMPS_UC is 
 begin
 
@@ -142,6 +159,8 @@ entity HLT is
         ciclo: in std_logic_vector(2 downto 0);
         HLT_out: out std_logic_vector(10 downto 0)
     );
+end entity;
+
 architecture arch of HLT is 
 begin
 
