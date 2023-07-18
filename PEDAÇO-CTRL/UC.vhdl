@@ -16,6 +16,16 @@ begin
 
 end arch ; -- arch
 
+--BIT 10 = NBARR/INC
+--BIT 09 = NBARR/PC
+--BIT 08-07-06 = ULA_OP
+--BIT 05 = PC_NRW
+--BIT 04 = AC_NRW
+--BIT 03 = MEM_NRW
+--BIT 02 = REM_NRW
+--BIT 01 = RDM_NRW
+--BIT 00 = RI_NRW
+
 --NOP
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -27,6 +37,16 @@ entity NOP is
 end entity;
 architecture arch of NOP is 
 begin
+
+    NOP_out(10) <=
+    NOP_out(9) <=
+    NOP_out(8 downto 6) <= "000";
+    NOP_out(5) <=
+    NOP_out(4) <=
+    NOP_out(3) <=
+    NOP_out(2) <=
+    NOP_out(1) <=
+    NOP_out(0) <=
 
 end arch; -- arch
 
@@ -43,6 +63,16 @@ end entity;
 architecture arch of STA is 
 begin
 
+    STA_out(10) <=
+    STA_out(9) <=
+    STA_out(8 downto 6) <= "000";
+    STA_out(5) <=
+    STA_out(4) <=
+    STA_out(3) <=
+    STA_out(2) <=
+    STA_out(1) <=
+    STA_out(0) <=
+
 end arch; -- arch
 
 --LDA
@@ -51,12 +81,22 @@ use IEEE.std_logic_1164.all;
 entity LDA is
     port(
         ciclo: in std_logic_vector(2 downto 0);
-        LDA_out: out std_logic_vector(10 downto 0)
+        LDA_out: out std_logic_vector(10 downto 0) --
     );
 end entity;
 
 architecture arch of LDA is 
 begin
+
+    LDA_out(10) <= 1;
+    LDA_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
+    LDA_out(8 downto 6) <= "000";
+    LDA_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    LDA_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
+    LDA_out(3) <= '0';
+    LDA_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
+    LDA_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    LDA_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
 
@@ -73,20 +113,15 @@ end entity;
 architecture arch of ADD is 
 begin
 
-end arch; -- arch
-
---AND
-library IEEE;
-use IEEE.std_logic_1164.all;
-entity AND_UC is
-    port(
-        ciclo: in std_logic_vector(2 downto 0);
-        AND_out: out std_logic_vector(10 downto 0)
-    );
-end entity;
-
-architecture arch of AND_UC is 
-begin
+    ADD_out(10) <= 1;
+    ADD_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
+    ADD_out(8 downto 6) <= "001";
+    ADD_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    ADD_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
+    ADD_out(3) <= '0';
+    ADD_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
+    ADD_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    ADD_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
 
@@ -103,6 +138,41 @@ end entity;
 architecture arch of OR_UC is 
 begin
 
+    OR_out(10) <= 1;
+    OR_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
+    OR_out(8 downto 6) <= "010";
+    OR_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    OR_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
+    OR_out(3) <= '0';
+    OR_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
+    OR_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    OR_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
+
+end arch; -- arch
+
+--AND
+library IEEE;
+use IEEE.std_logic_1164.all;
+entity AND_UC is
+    port(
+        ciclo: in std_logic_vector(2 downto 0);
+        AND_out: out std_logic_vector(10 downto 0)
+    );
+end entity;
+
+architecture arch of AND_UC is 
+begin
+
+    AND_out(10) <= 1;
+    AND_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
+    AND_out(8 downto 6) <= "011";
+    AND_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    AND_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
+    AND_out(3) <= '0';
+    AND_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
+    AND_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    AND_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
+
 end arch; -- arch
 
 --NOT
@@ -118,20 +188,15 @@ end entity;
 architecture arch of NOT_UC is 
 begin
 
-end arch; -- arch
-
---NOT
-library IEEE;
-use IEEE.std_logic_1164.all;
-entity NOT_UC is
-    port(
-        ciclo: in std_logic_vector(2 downto 0);
-        NOT_out: out std_logic_vector(10 downto 0)
-    );
-end entity;
-
-architecture arch of NOT_UC is 
-begin
+    NOT_out(10) <=
+    NOT_out(9) <=
+    NOT_out(8 downto 6) <= "100";
+    NOT_out(5) <=
+    NOT_out(4) <=
+    NOT_out(3) <=
+    NOT_out(2) <=
+    NOT_out(1) <=
+    NOT_out(0) <=
 
 end arch; -- arch
 
@@ -149,6 +214,16 @@ end entity;
 architecture arch of JMPS_UC is 
 begin
 
+    JMPS_out(10) <=
+    JMPS_out(9) <=
+    JMPS_out(8 downto 6) <= "000"
+    JMPS_out(5) <=
+    JMPS_out(4) <=
+    JMPS_out(3) <=
+    JMPS_out(2) <=
+    JMPS_out(1) <=
+    JMPS_out(0) <=
+
 end arch; -- arch
 
 --HLT
@@ -163,6 +238,8 @@ end entity;
 
 architecture arch of HLT is 
 begin
+
+    HTL_out <= OTHERS => '0';
 
 end arch; -- arch
 
