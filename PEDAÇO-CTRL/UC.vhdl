@@ -38,15 +38,15 @@ end entity;
 architecture arch of NOP is 
 begin
 
-    NOP_out(10) <=
-    NOP_out(9) <=
+    NOP_out(10) <= (not(ciclo(0)) and not(ciclo(1))) or (not(ciclo(0)) and ciclo(1) and not(ciclo(2))); 
+    NOP_out(9) <= (not(ciclo(0)) and not(ciclo(1))) or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
     NOP_out(8 downto 6) <= "000";
-    NOP_out(5) <=
-    NOP_out(4) <=
-    NOP_out(3) <=
-    NOP_out(2) <=
-    NOP_out(1) <=
-    NOP_out(0) <=
+    NOP_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOP_out(4) <= '0';
+    NOP_out(3) <= '0';
+    NOP_out(2) <= not(ciclo(0)) and not(ciclo(1)) and not(ciclo(2));
+    NOP_out(1) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOP_out(0) <= not(ciclo(0)) and ciclo(1) and ciclo(2);
 
 end arch; -- arch
 
@@ -63,15 +63,15 @@ end entity;
 architecture arch of STA is 
 begin
 
-    STA_out(10) <=
-    STA_out(9) <=
+    STA_out(10) <= not(ciclo(0)) or (not(ciclo(2)) and ciclo(0)) or (not(ciclo(1)) and ciclo(2) and ciclo(0));
+    STA_out(9) <= not(ciclo(0)) or (not(ciclo(2)) and ciclo(0));
     STA_out(8 downto 6) <= "000";
-    STA_out(5) <=
-    STA_out(4) <=
-    STA_out(3) <=
-    STA_out(2) <=
-    STA_out(1) <=
-    STA_out(0) <=
+    STA_out(5) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (ciclo(0) and not(ciclo(1)) and not(ciclo(2)));
+    STA_out(4) <= '0';
+    STA_out(3) <= ciclo(0) and ciclo(1) and not(ciclo(2));
+    STA_out(2) <= (not(ciclo(0) or ciclo(1) or ciclo(2))) or (not(ciclo(1)) and ciclo(0) and ciclo(2)) or (not(ciclo(0)) and ciclo(1) and ciclo(2));
+    STA_out(1) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (ciclo(0) and not(ciclo(1)) and not(ciclo(2)));
+    STA_out(0) <= not(ciclo(0)) and ciclo(1) and not(ciclo(2));
 
 end arch; -- arch
 
@@ -91,11 +91,11 @@ begin
     LDA_out(10) <= 1;
     LDA_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     LDA_out(8 downto 6) <= "000";
-    LDA_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    LDA_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     LDA_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
     LDA_out(3) <= '0';
     LDA_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
-    LDA_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    LDA_out(1) <= (ciclo(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
     LDA_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
@@ -116,11 +116,11 @@ begin
     ADD_out(10) <= 1;
     ADD_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     ADD_out(8 downto 6) <= "001";
-    ADD_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    ADD_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     ADD_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
     ADD_out(3) <= '0';
     ADD_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
-    ADD_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    ADD_out(1) <= (ciclo(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
     ADD_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
@@ -141,11 +141,11 @@ begin
     OR_out(10) <= 1;
     OR_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     OR_out(8 downto 6) <= "010";
-    OR_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    OR_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     OR_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
     OR_out(3) <= '0';
     OR_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
-    OR_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    OR_out(1) <= (ciclo(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
     OR_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
@@ -166,11 +166,11 @@ begin
     AND_out(10) <= 1;
     AND_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     AND_out(8 downto 6) <= "011";
-    AND_out(5) <= not(cilco(1)) and (cilco(2) xor ciclo(0));
+    AND_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     AND_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
     AND_out(3) <= '0';
     AND_out(2) <= (not(ciclo(1)) and (ciclo(2) xnor ciclo(0))) or (not(ciclo(2)) and ciclo(1) and ciclo(0));
-    AND_out(1) <= (cilco(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
+    AND_out(1) <= (ciclo(2) and not(ciclo(0))) or (not(ciclo(2)) and not(ciclo(1)) and ciclo(0));
     AND_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
@@ -188,44 +188,94 @@ end entity;
 architecture arch of NOT_UC is 
 begin
 
-    NOT_out(10) <=
-    NOT_out(9) <=
-    NOT_out(8 downto 6) <= "100";
-    NOT_out(5) <=
-    NOT_out(4) <=
-    NOT_out(3) <=
-    NOT_out(2) <=
-    NOT_out(1) <=
-    NOT_out(0) <=
+    NOT_out(10) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
+    NOT_out(9) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
+    NOT_out(8) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
+    NOT_out(7 downto 6) <= "00";
+    NOT_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOT_out(4) <= '0';
+    NOT_out(3) <= '0';
+    NOT_out(2) <= not(ciclo(0)) and not(ciclo(1)) and not(ciclo(2));
+    NOT_out(1) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOT_out(0) <= ciclo(1) and not(ciclo(0)) and not(ciclo(2));
 
 end arch; -- arch
 
---JMPS
+--JMP
 library IEEE;
 use IEEE.std_logic_1164.all;
-entity JMPS_UC is
+entity JMP_UC is
     port(
-        NZ: in std_logic_vector(1 downto 0);
         ciclo: in std_logic_vector(2 downto 0);
-        JMPS_out: out std_logic_vector(10 downto 0)
+        JMP_out: out std_logic_vector(10 downto 0)
     );
 end entity;
 
-architecture arch of JMPS_UC is 
+architecture arch of JMP_UC is 
 begin
 
-    JMPS_out(10) <=
-    JMPS_out(9) <=
-    JMPS_out(8 downto 6) <= "000"
-    JMPS_out(5) <=
-    JMPS_out(4) <=
-    JMPS_out(3) <=
-    JMPS_out(2) <=
-    JMPS_out(1) <=
-    JMPS_out(0) <=
+    JMP_out(10) <= not(ciclo(0)) or (ciclo(0) and not(ciclo(1)));
+    JMP_out(9) <= (not(ciclo(0))) or (not(ciclo(1)) and not(ciclo(2)) and ciclo(0));
+    JMP_out(8 downto 6) <= "000";
+    JMP_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    JMP_out(4) <= '0';
+    JMP_out(3) <= '0';
+    JMP_out(2) <= (not(ciclo(0) or ciclo(1) or ciclo(2))) or (not(ciclo(0)) and ciclo(1) and ciclo(2));
+    JMP_out(1) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (not(ciclo(1)) and not(ciclo(2)) and ciclo(0));
+    JMP_out(0) <= not(ciclo(0)) and ciclo(1) and not(ciclo(2));
 
 end arch; -- arch
 
+--JMPN
+library IEEE;
+use IEEE.std_logic_1164.all;
+entity JMPN_UC is
+    port(
+        NZ: in std_logic_vector(1 downto 0);
+        ciclo: in std_logic_vector(2 downto 0);
+        JMPN_out: out std_logic_vector(10 downto 0)
+    );
+end entity;
+
+architecture arch of JMPN_UC is 
+    component JMP_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            JMP_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    signal sJMPN : std_logic_vector(10 downto 0);
+begin
+    u_JMPN : JMP_UC  port map(ciclo, sJMPN);
+    
+    JMPN_out <= sJMPN when NZ = "10" else "00000100000";    
+
+end arch; -- arch
+
+--JMPZ
+library IEEE;
+use IEEE.std_logic_1164.all;
+entity JMPZ_UC is
+    port(
+        NZ: in std_logic_vector(1 downto 0);
+        ciclo: in std_logic_vector(2 downto 0);
+        JMPZ_out: out std_logic_vector(10 downto 0)
+    );
+end entity;
+
+architecture arch of JMPZ_UC is 
+    component JMP_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            JMP_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    signal sJPMZ : std_logic_vector(10 downto 0);
+begin
+    u_JMPZ : JMP_UC  port map(ciclo, sJMPZ);
+    
+    JMPZ_out <= sJMPZ when NZ = "01" else "00000100000";    
+end arch; -- arch
 --HLT
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -239,10 +289,11 @@ end entity;
 architecture arch of HLT is 
 begin
 
-    HTL_out <= OTHERS => '0';
+    HTL_out <= "00000000000";
 
 end arch; -- arch
 
+--------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;
