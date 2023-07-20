@@ -12,6 +12,93 @@ entity UC is
 end entity;
 
 architecture arch of UC is 
+    ----------------------CONTADOR---------------------
+    component CONTADOR is
+        port(
+            clk, reset : in std_logic;
+            z : out std_logic_vector(2 downto 0)
+        );
+    end component;
+    ------------------------NOP------------------------
+    component  NOP is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            NOP_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------STA------------------------
+    component STA is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            STA_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------LDA------------------------
+    component LDA is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            LDA_out: out std_logic_vector(10 downto 0) 
+        );
+    end component;
+    ------------------------ADD------------------------
+    component ADD is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            ADD_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------OR------------------------
+    component OR_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            OR_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------AND------------------------
+    component AND_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            AND_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------NOT------------------------
+    component NOT_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            NOT_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------JMP------------------------
+    component JMP_UC is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            JMP_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------JMPN------------------------
+    component JMPN_UC is
+        port(
+            NZ: in std_logic_vector(1 downto 0);
+            ciclo: in std_logic_vector(2 downto 0);
+            JMPN_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------JMPZ------------------------
+    component JMPZ_UC is
+        port(
+            NZ: in std_logic_vector(1 downto 0);
+            ciclo: in std_logic_vector(2 downto 0);
+            JMPZ_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+    ------------------------HLT------------------------
+    component HLT is
+        port(
+            ciclo: in std_logic_vector(2 downto 0);
+            HLT_out: out std_logic_vector(10 downto 0)
+        );
+    end component;
+
 begin
 
 end arch ; -- arch
