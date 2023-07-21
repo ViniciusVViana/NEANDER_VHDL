@@ -4,14 +4,21 @@ use IEEE.std_logic_1164.all;
 
 entity UC is
     port(
-        dec2uc: in std_logic_vector(11 downto 0);
+        dec2uc: in std_logic_vector(10 downto 0);
         NZ: in std_logic_vector(1 downto 0);
         rst, clk: in std_logic;
-        barr_ctrl: out std_logic_vector(11 downto 0)
+        barr_ctrl: out std_logic_vector(10 downto 0)
     );
 end entity;
 
 architecture arch of UC is 
+    component decode is
+        port(
+            instr_in_decode: in std_logic_vector(7 downto 0);
+            instr_out_decode: out std_logic_vector(10 downto 0)
+        );
+        end component;
+
     ----------------------CONTADOR---------------------
     component CONTADOR is
         port(
@@ -99,19 +106,43 @@ architecture arch of UC is
         );
     end component;
 
+    signal sNOP, sSTA, sLDA, sADD, sOR_UC, sAND_UC, sNOT_UC, sJMP_UC, sJMPN_UC, sJMPZ_UC, sHLT : std_logic_vector(10 downto 0);
+    signal s_instr_out_decode : std_logic_vector(10 downto 0);
+    signal sCTD : std_logic_vector(2 downto 0);
+    
+
 begin
+    eUC : UC port map(s_instr_out_decode, NZ, rst, clk, barr_ctrl);
 
+    uDC : decode port map();
+
+    uCONT    : CONTADOR port map(clk, rst, sCTD);
+    uNOP     : NOP port map(sCTD, sNOP);
+    uSTA     : STA port map(sCTD, sSTA);
+    uLDA     : LDA port map(sCTD, sLDA);
+    uADD     : ADD port map(sCTD, sADD);
+    uOR_UC   : OR_UC port map(sCTD, sOR_UC);
+    uAND_UC  : AND_UC port map(sCTD, sAND_UC);
+    uNOT_UC  : NOT_UC port map(sCTD, sNOT_UC);
+    uJMP_UC  : JMP_UC port map(sCTD, sJMP_UC);
+    uJMPN_UC : JMPN_UC port map(NZ, sCTD, sJMPN_UC);
+    uJMPZ_UC : JMPZ_UC port map(NZ, sCTD, sJMPZ_UC);
+    uHLT     : HLT port map(sCTD, sHLT);
+
+    -- MUX ESPECIAL:
+        barr_ctrl <= sNOP       when dec2uc = "10000000000" else (others  => 'Z');
+        barr_ctrl <= sSTA       when dec2uc = "01000000000" else (others  => 'Z');
+        barr_ctrl <= sLDA       when dec2uc = "00100000000" else (others  => 'Z');  
+        barr_ctrl <= sADD       when dec2uc = "00010000000" else (others  => 'Z'); 
+        barr_ctrl <= sOR_UC     when dec2uc = "00001000000" else (others  => 'Z');  
+        barr_ctrl <= sAND_UC    when dec2uc = "00000100000" else (others  => 'Z');
+        barr_ctrl <= sNOT_UC    when dec2uc = "00000010000" else (others  => 'Z');
+        barr_ctrl <= sJMP_UC    when dec2uc = "00000001000" else (others  => 'Z');
+        barr_ctrl <= sJMPN_UC   when dec2uc = "00000000100" else (others  => 'Z');
+        barr_ctrl <= sJMPZ_UC   when dec2uc = "00000000010" else (others  => 'Z');
+        barr_ctrl <= sHLT       when dec2uc = "00000000001" else (others  => 'Z'); 
+        
 end arch ; -- arch
-
---BIT 10 = NBARR/INC
---BIT 09 = NBARR/PC
---BIT 08-07-06 = ULA_OP
---BIT 05 = PC_NRW
---BIT 04 = AC_NRW
---BIT 03 = MEM_NRW
---BIT 02 = REM_NRW
---BIT 01 = RDM_NRW
---BIT 00 = RI_NRW
 
 --NOP
 library IEEE;
@@ -175,7 +206,7 @@ end entity;
 architecture arch of LDA is 
 begin
 
-    LDA_out(10) <= 1;
+    LDA_out(10) <= '1';
     LDA_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     LDA_out(8 downto 6) <= "000";
     LDA_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
@@ -200,7 +231,7 @@ end entity;
 architecture arch of ADD is 
 begin
 
-    ADD_out(10) <= 1;
+    ADD_out(10) <= '1';
     ADD_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     ADD_out(8 downto 6) <= "001";
     ADD_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
@@ -225,7 +256,7 @@ end entity;
 architecture arch of OR_UC is 
 begin
 
-    OR_out(10) <= 1;
+    OR_out(10) <= '1';
     OR_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     OR_out(8 downto 6) <= "010";
     OR_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
@@ -250,7 +281,7 @@ end entity;
 architecture arch of AND_UC is 
 begin
 
-    AND_out(10) <= 1;
+    AND_out(10) <= '1';
     AND_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     AND_out(8 downto 6) <= "011";
     AND_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
@@ -359,9 +390,9 @@ architecture arch of JMPZ_UC is
     end component;
     signal sJPMZ : std_logic_vector(10 downto 0);
 begin
-    u_JMPZ : JMP_UC  port map(ciclo, sJMPZ);
+    u_JMPZ : JMP_UC  port map(ciclo, sJPMZ);
     
-    JMPZ_out <= sJMPZ when NZ = "01" else "00000100000";    
+    JMPZ_out <= sJPMZ when NZ = "01" else "00000100000";    
 end arch; -- arch
 --HLT
 library IEEE;
@@ -376,9 +407,36 @@ end entity;
 architecture arch of HLT is 
 begin
 
-    HTL_out <= "00000000000";
+    HLT_out <= "00000000000";
 
 end arch; -- arch
+
+--------------------------
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+entity decode is
+    port(
+        instr_in_decode: in std_logic_vector(7 downto 0);
+        instr_out_decode: out std_logic_vector(10 downto 0)
+    );
+end entity;
+
+architecture arch of decode is
+begin
+    instr_out_decode <= "10000000000" when instr_in_decode = "00000000" else (others  => 'Z');
+    instr_out_decode <= "01000000000" when instr_in_decode = "00010000" else (others  => 'Z');
+    instr_out_decode <= "00100000000" when instr_in_decode = "00100000" else (others  => 'Z');    
+    instr_out_decode <= "00010000000" when instr_in_decode = "00110000" else (others  => 'Z');    
+    instr_out_decode <= "00001000000" when instr_in_decode = "01000000" else (others  => 'Z');
+    instr_out_decode <= "00000100000" when instr_in_decode = "01010000" else (others  => 'Z');
+    instr_out_decode <= "00000010000" when instr_in_decode = "01100000" else (others  => 'Z');    
+    instr_out_decode <= "00000001000" when instr_in_decode = "10000000" else (others  => 'Z'); 
+    instr_out_decode <= "00000000100" when instr_in_decode = "10010000" else (others  => 'Z');
+    instr_out_decode <= "00000000010" when instr_in_decode = "10100000" else (others  => 'Z');    
+    instr_out_decode <= "00000000001" when instr_in_decode = "11110000" else (others  => 'Z'); 
+end arch ; -- arch
 
 --------------------------
 
@@ -450,12 +508,10 @@ use ieee.std_logic_1164.all;
 entity FFJK is
 
     port(
-
         j, k   : in std_logic;
         clock  : in std_logic;
         pr, cl : in std_logic;
         q, nq  : out std_logic
-
     );
 
 end;
