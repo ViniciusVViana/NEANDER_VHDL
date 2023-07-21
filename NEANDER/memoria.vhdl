@@ -185,4 +185,3 @@ begin
 		end if; -- reset = '1' and notrw = '0'
 	end process rampR;
 end architecture behavior;
-
