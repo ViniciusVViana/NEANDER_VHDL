@@ -12,12 +12,13 @@ entity UC is
 end entity;
 
 architecture arch of UC is 
+    --------------------DECODIFICADOR------------------
     component decode is
         port(
             instr_in_decode: in std_logic_vector(7 downto 0);
             instr_out_decode: out std_logic_vector(10 downto 0)
         );
-        end component;
+    end component;
 
     ----------------------CONTADOR---------------------
     component CONTADOR is
@@ -106,15 +107,9 @@ architecture arch of UC is
         );
     end component;
 
-    signal sNOP, sSTA, sLDA, sADD, sOR_UC, sAND_UC, sNOT_UC, sJMP_UC, sJMPN_UC, sJMPZ_UC, sHLT : std_logic_vector(10 downto 0);
-    signal s_instr_out_decode : std_logic_vector(10 downto 0);
+    signal sNOP, sSTA, sLDA, sADD, sOR_UC, sAND_UC, sNOT_UC, sJMP_UC, sJMPN_UC, sJMPZ_UC, sHLT, s_instr_out_decode : std_logic_vector(10 downto 0);
     signal sCTD : std_logic_vector(2 downto 0);
-    
-
 begin
-    eUC : UC port map(s_instr_out_decode, NZ, rst, clk, barr_ctrl);
-
-    uDC : decode port map();
 
     uCONT    : CONTADOR port map(clk, rst, sCTD);
     uNOP     : NOP port map(sCTD, sNOP);
@@ -129,19 +124,19 @@ begin
     uJMPZ_UC : JMPZ_UC port map(NZ, sCTD, sJMPZ_UC);
     uHLT     : HLT port map(sCTD, sHLT);
 
-    -- MUX ESPECIAL:
-        barr_ctrl <= sNOP       when dec2uc = "10000000000" else (others  => 'Z');
-        barr_ctrl <= sSTA       when dec2uc = "01000000000" else (others  => 'Z');
-        barr_ctrl <= sLDA       when dec2uc = "00100000000" else (others  => 'Z');  
-        barr_ctrl <= sADD       when dec2uc = "00010000000" else (others  => 'Z'); 
-        barr_ctrl <= sOR_UC     when dec2uc = "00001000000" else (others  => 'Z');  
-        barr_ctrl <= sAND_UC    when dec2uc = "00000100000" else (others  => 'Z');
-        barr_ctrl <= sNOT_UC    when dec2uc = "00000010000" else (others  => 'Z');
-        barr_ctrl <= sJMP_UC    when dec2uc = "00000001000" else (others  => 'Z');
-        barr_ctrl <= sJMPN_UC   when dec2uc = "00000000100" else (others  => 'Z');
-        barr_ctrl <= sJMPZ_UC   when dec2uc = "00000000010" else (others  => 'Z');
-        barr_ctrl <= sHLT       when dec2uc = "00000000001" else (others  => 'Z'); 
-        
+    dec2uc <= s_instr_out_decode;
+    NZ <= "Z";
+    barr_ctrl <= sNOP       when dec2uc = "10000000000" else (others  => 'Z');
+    barr_ctrl <= sSTA       when dec2uc = "01000000000" else (others  => 'Z');
+    barr_ctrl <= sLDA       when dec2uc = "00100000000" else (others  => 'Z');  
+    barr_ctrl <= sADD       when dec2uc = "00010000000" else (others  => 'Z'); 
+    barr_ctrl <= sOR_UC     when dec2uc = "00001000000" else (others  => 'Z');  
+    barr_ctrl <= sAND_UC    when dec2uc = "00000100000" else (others  => 'Z');
+    barr_ctrl <= sNOT_UC    when dec2uc = "00000010000" else (others  => 'Z');
+    barr_ctrl <= sJMP_UC    when dec2uc = "00000001000" else (others  => 'Z');
+    barr_ctrl <= sJMPN_UC   when dec2uc = "00000000100" else (others  => 'Z');
+    barr_ctrl <= sJMPZ_UC   when dec2uc = "00000000010" else (others  => 'Z');
+    barr_ctrl <= sHLT       when dec2uc = "00000000001" else (others  => 'Z');; 
 end arch ; -- arch
 
 --NOP
@@ -410,33 +405,6 @@ begin
     HLT_out <= "00000000000";
 
 end arch; -- arch
-
---------------------------
-
-library IEEE;
-use IEEE.std_logic_1164.all;
-
-entity decode is
-    port(
-        instr_in_decode: in std_logic_vector(7 downto 0);
-        instr_out_decode: out std_logic_vector(10 downto 0)
-    );
-end entity;
-
-architecture arch of decode is
-begin
-    instr_out_decode <= "10000000000" when instr_in_decode = "00000000" else (others  => 'Z');
-    instr_out_decode <= "01000000000" when instr_in_decode = "00010000" else (others  => 'Z');
-    instr_out_decode <= "00100000000" when instr_in_decode = "00100000" else (others  => 'Z');    
-    instr_out_decode <= "00010000000" when instr_in_decode = "00110000" else (others  => 'Z');    
-    instr_out_decode <= "00001000000" when instr_in_decode = "01000000" else (others  => 'Z');
-    instr_out_decode <= "00000100000" when instr_in_decode = "01010000" else (others  => 'Z');
-    instr_out_decode <= "00000010000" when instr_in_decode = "01100000" else (others  => 'Z');    
-    instr_out_decode <= "00000001000" when instr_in_decode = "10000000" else (others  => 'Z'); 
-    instr_out_decode <= "00000000100" when instr_in_decode = "10010000" else (others  => 'Z');
-    instr_out_decode <= "00000000010" when instr_in_decode = "10100000" else (others  => 'Z');    
-    instr_out_decode <= "00000000001" when instr_in_decode = "11110000" else (others  => 'Z'); 
-end arch ; -- arch
 
 --------------------------
 
