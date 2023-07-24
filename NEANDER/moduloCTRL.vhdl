@@ -536,11 +536,11 @@ architecture CONTAR of CONTADOR is
         );
     end component;
     component FFJK is
-        port(
-            j, k   : in std_logic;
-            clock  : in std_logic;
-            pr, cl : in std_logic;
-            q, nq  : out std_logic
+        PORT (
+        j, k : IN STD_LOGIC;
+        clk : IN STD_LOGIC;
+        pr, cl : IN STD_LOGIC;
+        q, nq : OUT STD_LOGIC
         );
     end component;
 
@@ -579,65 +579,69 @@ begin
     K(0) <= '1';
 end architecture;
 ----------------FFJK-------------------------
-library ieee;
-use ieee.std_logic_1164.all;
+library IEEE;
+use IEEE.std_logic_1164.all;
 
-entity FFJK is
-
-    port(
-        j, k   : in std_logic;
-        clock  : in std_logic;
-        pr, cl : in std_logic;
-        q, nq  : out std_logic
+ENTITY ffjk IS
+    PORT (
+        j, k : IN STD_LOGIC;
+        clk : IN STD_LOGIC;
+        pr, cl : IN STD_LOGIC;
+        q, nq : OUT STD_LOGIC
     );
+END ENTITY;
 
-end;
+ARCHITECTURE latch OF ffjk IS
+    SIGNAL sq : STD_LOGIC := '0'; -- opcional -> valor inicial
+    SIGNAL snq : STD_LOGIC := '1';
+BEGIN
 
-architecture FF of FFJK is
+    q <= sq;
+    nq <= snq;
 
-    signal s_snj , s_snk    : std_logic;
-    signal s_sns , s_snr    : std_logic;
-    signal s_sns2 , s_snr2  : std_logic;
-    signal s_eloS , s_eloR  : std_logic;
-    signal s_eloQ , s_elonQ : std_logic;
-    signal s_nClock         : std_logic;
+    u_ff : PROCESS (clk, pr, cl)
+    BEGIN
+        -- pr = 0 e cl = 0 -> Desconhecido
+        IF (pr = '0') AND (cl = '0') THEN
+            sq <= 'X';
+            snq <= 'X';
+            -- prioridade para cl
+        ELSIF (pr = '1') AND (cl = '0') THEN
+            sq <= '0';
+            snq <= '1';
+            -- tratamento de pr
+        ELSIF (pr = '0') AND (cl = '1') THEN
+            sq <= '1';
+            snq <= '0';
+            -- pr e cl desativados
+        ELSIF (pr = '1') AND (cl = '1') THEN
+            IF falling_edge(clk) THEN
+                -- jk = 00 -> mantém estado
+                IF (j = '0') AND (k = '0') THEN
+                    sq <= sq;
+                    snq <= snq;
+                    -- jk = 01 -> q = 0
+                ELSIF (j = '0') AND (k = '1') THEN
+                    sq <= '0';
+                    snq <= '1';
+                    -- jk = 01 -> q = 1
+                ELSIF (j = '1') AND (k = '0') THEN
+                    sq <= '1';
+                    snq <= '0';
+                    -- jk = 11 -> q = !q
+                ELSIF (j = '1') AND (k = '1') THEN
+                    sq <= NOT(sq);
+                    snq <= NOT(snq);
+                    -- jk = ?? -> falha
+                ELSE
+                    sq <= 'U';
+                    snq <= 'U';
+                END IF;
+            END IF;
+        ELSE
+            sq <= 'X';
+            snq <= 'X';
+        END IF;
+    END PROCESS;
 
-begin
-
-    s_nClock <= not clock;
-
-    --s_snj
-    s_snj <= not(j and clock and s_elonQ);
-
-    --s_snk
-    s_snk <= not(k and clock and s_eloQ);
-
-    --s_sns
-    s_sns <= not(s_snj and pr and s_eloR);
-
-    --s_snr
-    s_snr <= not(s_snk and cl and s_eloS);
-
-    --s_sns2
-    s_sns2 <= s_sns nand s_nClock;
-
-    --s_snr2
-    s_snr2 <= s_snr nand s_nClock;
-
-    --s_eloS
-    s_eloS <= not(s_snj and pr and s_eloR);
-
-    --s_eloR
-    s_eloR <= not(s_snk and cl and s_eloS);
-
-    --s_eloQ
-    s_eloQ <= not(s_sns2 and s_elonQ and pr);
-
-    --s_elonQ
-    s_elonQ <= not(s_eloQ and s_snr2 and cl);
-
-    --Q ~Q
-    q <= not(s_sns2 and s_elonQ and pr);
-    nq <= not(s_eloQ and s_snr2 and cl);
-
-end architecture;
+END ARCHITECTURE;
