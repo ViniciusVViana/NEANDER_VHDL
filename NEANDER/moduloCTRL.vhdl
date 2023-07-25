@@ -95,13 +95,6 @@ entity UC is
 end entity;
 
 architecture arch of UC is 
-    --------------------DECODIFICADOR------------------
-    component decode is
-        port(
-            instr_in_decode: in std_logic_vector(7 downto 0);
-            instr_out_decode: out std_logic_vector(10 downto 0)
-        );
-    end component;
 
     ----------------------CONTADOR---------------------
     component CONTADOR is
@@ -190,7 +183,7 @@ architecture arch of UC is
         );
     end component;
 
-    signal sNOP, sSTA, sLDA, sADD, sOR_UC, sAND_UC, sNOT_UC, sJMP_UC, sJMPN_UC, sJMPZ_UC, sHLT, s_instr_out_decode : std_logic_vector(10 downto 0);
+    signal sNOP, sSTA, sLDA, sADD, sOR_UC, sAND_UC, sNOT_UC, sJMP_UC, sJMPN_UC, sJMPZ_UC, sHLT : std_logic_vector(10 downto 0);
     signal sCTD : std_logic_vector(2 downto 0);
 begin
 
@@ -285,15 +278,15 @@ end entity;
 architecture arch of STA is 
 begin
 
-    STA_out(10) <= not(ciclo(0)) or (not(ciclo(2)) and ciclo(0)) or (not(ciclo(1)) and ciclo(2) and ciclo(0));
-    STA_out(9) <= not(ciclo(0)) or (not(ciclo(2)) and ciclo(0));
+    STA_out(10) <= '1';
+    STA_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
     STA_out(8 downto 6) <= "000";
-    STA_out(5) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (ciclo(0) and not(ciclo(1)) and not(ciclo(2)));
+    STA_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     STA_out(4) <= '0';
-    STA_out(3) <= ciclo(0) and ciclo(1) and not(ciclo(2));
-    STA_out(2) <= (not(ciclo(0) or ciclo(1) or ciclo(2))) or (not(ciclo(1)) and ciclo(0) and ciclo(2)) or (not(ciclo(0)) and ciclo(1) and ciclo(2));
-    STA_out(1) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (ciclo(0) and not(ciclo(1)) and not(ciclo(2)));
-    STA_out(0) <= not(ciclo(0)) and ciclo(1) and not(ciclo(2));
+    STA_out(3) <= ciclo(2) and ciclo(1) and not(ciclo(0));
+    STA_out(2) <= (ciclo(0) and (ciclo(2) xor ciclo(1))) or (not(ciclo(2)) and not(ciclo(1)) and not(ciclo(0)));
+    STA_out(1) <= not ciclo(1) and (ciclo(2) xor ciclo(0)); --aaaaa
+    STA_out(0) <= not ciclo(2) and ciclo(1) and not ciclo(0);
 
 end arch; -- arch
 

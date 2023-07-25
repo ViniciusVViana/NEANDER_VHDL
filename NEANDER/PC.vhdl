@@ -28,16 +28,16 @@ ARCHITECTURE arch OF PC IS
         AC_dataout : OUT STD_LOGIC_VECTOR(7 DOWNTO 0)
     );
     END COMPONENT;
-    SIGNAL sadd, s_mux2pc, s_PCatual, aux : STD_LOGIC_VECTOR(7 DOWNTO 0);
+    SIGNAL sadd, s_mux2pc, s_PCatual :  STD_LOGIC_VECTOR(7 DOWNTO 0);
     SIGNAL auxcout : STD_LOGIC;
 BEGIN
     --
-
+    endout <= s_PCatual;
     u_add : somador_8bits PORT MAP("00000001", s_PCatual, '0', auxcout, sadd);
 
     s_mux2pc <= sadd when nbarrinc = '1' else barr when nbarrinc = '0';
 
-    u_regPC : regPC PORT MAP(s_mux2pc, clk, '1', cl, nrw, endout);
+    u_regPC : regPC PORT MAP(s_mux2pc, clk, '1', cl, nrw, s_PCatual);
 
 END ARCHITECTURE;
     -----------REGISTRADOR DE 8 BITS-----------------
