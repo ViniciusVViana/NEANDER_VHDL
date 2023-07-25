@@ -162,7 +162,6 @@ architecture arch of UC is
     ------------------------JMPN------------------------
     component JMPN_UC is
         port(
-            NZ: in std_logic_vector(1 downto 0);
             ciclo: in std_logic_vector(2 downto 0);
             JMPN_out: out std_logic_vector(10 downto 0)
         );
@@ -170,7 +169,6 @@ architecture arch of UC is
     ------------------------JMPZ------------------------
     component JMPZ_UC is
         port(
-            NZ: in std_logic_vector(1 downto 0);
             ciclo: in std_logic_vector(2 downto 0);
             JMPZ_out: out std_logic_vector(10 downto 0)
         );
@@ -460,9 +458,7 @@ begin
  
      JMPN_out(10) <= '1';
      JMPN_out(9) <= '1';
-     JMPN_out(8) <= '0';
-     JMPN_out(7) <= '0';
-     JMPN_out(6) <= '0';
+     JMPN_out(8 downto 6) <= "000";
      JMPN_out(5) <= not(ciclo(2)) and ciclo(0); 
      JMPN_out(4) <= '0';
      JMPN_out(3) <= '0';
@@ -489,15 +485,13 @@ begin
     JMPZ_out(10) <= '1';
     JMPZ_out(9) <= '1';
 
-    JMPZ_out(8) <= '0';
-    JMPZ_out(7) <= '0';
-    JMPZ_out(6) <= '0';
-    JMPZ_out(5) <= not(b(2)) and b(0);  
+    JMPZ_out(8 downto 6) <= "000";
+    JMPZ_out(5) <= not(ciclo(2)) and ciclo(0);  
     JMPZ_out(4) <= '0';     
     JMPZ_out(3) <= '0'; 
-    JMPZ_out(2) <= not(b(2)) and not(b(1)) and not(b(0)); 
-    JMPZ_out(1) <= not(b(2)) and not(b(1)) and b(0); 
-    JMPZ_out(0) <= not(b(2)) and b(1) and not(b(0));
+    JMPZ_out(2) <= not(ciclo(2)) and not(ciclo(1)) and not(ciclo(0)); 
+    JMPZ_out(1) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0); 
+    JMPZ_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 end arch; -- arch
 --HLT
 library IEEE;
