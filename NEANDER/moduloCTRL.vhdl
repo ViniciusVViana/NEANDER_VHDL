@@ -432,15 +432,15 @@ end entity;
 architecture arch of JMP_UC is 
 begin
 
-    JMP_out(10) <= not(ciclo(0)) or (ciclo(0) and not(ciclo(1)));
+    JMP_out(10) <= not(ciclo(2)) or (not(ciclo(1)) and not(ciclo(0)));
     JMP_out(9) <= '1';
     JMP_out(8 downto 6) <= "000";
-    JMP_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    JMP_out(5) <=  not(ciclo(1)) and ciclo(0);
     JMP_out(4) <= '0';
     JMP_out(3) <= '0';
-    JMP_out(2) <= (not(ciclo(0) or ciclo(1) or ciclo(2))) or (not(ciclo(0)) and ciclo(1) and ciclo(2));
-    JMP_out(1) <= (not(ciclo(0)) and not(ciclo(1)) and ciclo(2)) or (not(ciclo(1)) and not(ciclo(2)) and ciclo(0));
-    JMP_out(0) <= not(ciclo(0)) and ciclo(1) and not(ciclo(2));
+    JMP_out(2) <= not(ciclo(2)) and (ciclo(1) xnor ciclo(0));
+    JMP_out(1) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
+    JMP_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0));
 
 end arch; -- arch
 
@@ -449,24 +449,26 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 entity JMPN_UC is
     port(
-        NZ: in std_logic_vector(1 downto 0);
         ciclo: in std_logic_vector(2 downto 0);
         JMPN_out: out std_logic_vector(10 downto 0)
     );
 end entity;
 
 architecture arch of JMPN_UC is 
-    component JMP_UC is
-        port(
-            ciclo: in std_logic_vector(2 downto 0);
-            JMP_out: out std_logic_vector(10 downto 0)
-        );
-    end component;
-    signal sJMPN : std_logic_vector(10 downto 0);
+   
 begin
-    u_JMPN : JMP_UC  port map(ciclo, sJMPN);
-    
-    JMPN_out <= sJMPN when NZ = "10" else "00000100000";    
+ 
+     JMPN_out(10) <= '1';
+     JMPN_out(9) <= '1';
+     JMPN_out(8) <= '0';
+     JMPN_out(7) <= '0';
+     JMPN_out(6) <= '0';
+     JMPN_out(5) <= not(ciclo(2)) and ciclo(0); 
+     JMPN_out(4) <= '0';
+     JMPN_out(3) <= '0';
+     JMPN_out(2) <= not(ciclo(2)) and not(ciclo(1)) and not(ciclo(0)); 
+     JMPN_out(1) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0); 
+     JMPN_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(0)); 
 
 end arch; -- arch
 
@@ -475,24 +477,27 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 entity JMPZ_UC is
     port(
-        NZ: in std_logic_vector(1 downto 0);
         ciclo: in std_logic_vector(2 downto 0);
         JMPZ_out: out std_logic_vector(10 downto 0)
+
     );
 end entity;
 
 architecture arch of JMPZ_UC is 
-    component JMP_UC is
-        port(
-            ciclo: in std_logic_vector(2 downto 0);
-            JMP_out: out std_logic_vector(10 downto 0)
-        );
-    end component;
-    signal sJPMZ : std_logic_vector(10 downto 0);
+
 begin
-    u_JMPZ : JMP_UC  port map(ciclo, sJPMZ);
-    
-    JMPZ_out <= sJPMZ when NZ = "01" else "00000100000";    
+    JMPZ_out(10) <= '1';
+    JMPZ_out(9) <= '1';
+
+    JMPZ_out(8) <= '0';
+    JMPZ_out(7) <= '0';
+    JMPZ_out(6) <= '0';
+    JMPZ_out(5) <= not(b(2)) and b(0);  
+    JMPZ_out(4) <= '0';     
+    JMPZ_out(3) <= '0'; 
+    JMPZ_out(2) <= not(b(2)) and not(b(1)) and not(b(0)); 
+    JMPZ_out(1) <= not(b(2)) and not(b(1)) and b(0); 
+    JMPZ_out(0) <= not(b(2)) and b(1) and not(b(0));
 end arch; -- arch
 --HLT
 library IEEE;
