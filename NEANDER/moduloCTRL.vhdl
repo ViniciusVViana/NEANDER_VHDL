@@ -257,15 +257,15 @@ end entity;
 architecture arch of NOP is 
 begin
 
-    NOP_out(10) <= (not(ciclo(0)) and not(ciclo(1))) or (not(ciclo(0)) and ciclo(1) and not(ciclo(2))); 
-    NOP_out(9) <= (not(ciclo(0)) and not(ciclo(1))) or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
+    NOP_out(10) <= '1'; 
+    NOP_out(9) <= '1';
     NOP_out(8 downto 6) <= "000";
-    NOP_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOP_out(5) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0);
     NOP_out(4) <= '0';
     NOP_out(3) <= '0';
-    NOP_out(2) <= not(ciclo(0)) and not(ciclo(1)) and not(ciclo(2));
-    NOP_out(1) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
-    NOP_out(0) <= not(ciclo(0)) and ciclo(1) and ciclo(2);
+    NOP_out(2) <= not(ciclo(2)) and not(ciclo(1)) and not(ciclo(0));
+    NOP_out(1) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0);
+    NOP_out(0) <= not(ciclo(2)) and ciclo(1) and not(ciclo(2));
 
 end arch; -- arch
 
@@ -283,7 +283,7 @@ architecture arch of STA is
 begin
 
     STA_out(10) <= '1';
-    STA_out(9) <= not(ciclo(2)) or ciclo(1) or not(ciclo(0));
+    STA_out(9) <= not(ciclo(2)) or (ciclo(2) and not(ciclo(0)));
     STA_out(8 downto 6) <= "000";
     STA_out(5) <= not(ciclo(1)) and (ciclo(2) xor ciclo(0));
     STA_out(4) <= '0';
@@ -407,15 +407,14 @@ end entity;
 architecture arch of NOT_UC is 
 begin
 
-    NOT_out(10) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
-    NOT_out(9) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
-    NOT_out(8) <= (not(ciclo(0)) and not(ciclo(1)) )or (not(ciclo(0)) and ciclo(1) and not(ciclo(2)));
-    NOT_out(7 downto 6) <= "00";
-    NOT_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
-    NOT_out(4) <= '0';
+    NOT_out(10) <= '1';
+    NOT_out(9) <= '1';
+    NOT_out(8 downto 6) <= "100";
+    NOT_out(5) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0);
+    NOT_out(4) <= ciclo(2) and ciclo(1) and ciclo(0);
     NOT_out(3) <= '0';
-    NOT_out(2) <= not(ciclo(0)) and not(ciclo(1)) and not(ciclo(2));
-    NOT_out(1) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
+    NOT_out(2) <= not(ciclo(2)) and not(ciclo(1)) and not(ciclo(0));
+    NOT_out(1) <= not(ciclo(2)) and not(ciclo(1)) and ciclo(0);
     NOT_out(0) <= ciclo(1) and not(ciclo(0)) and not(ciclo(2));
 
 end arch; -- arch
@@ -434,7 +433,7 @@ architecture arch of JMP_UC is
 begin
 
     JMP_out(10) <= not(ciclo(0)) or (ciclo(0) and not(ciclo(1)));
-    JMP_out(9) <= (not(ciclo(0))) or (not(ciclo(1)) and not(ciclo(2)) and ciclo(0));
+    JMP_out(9) <= '1';
     JMP_out(8 downto 6) <= "000";
     JMP_out(5) <= not(ciclo(0)) and not(ciclo(1)) and ciclo(2);
     JMP_out(4) <= '0';
