@@ -200,18 +200,21 @@ begin
     uJMPZ_UC : JMPZ_UC port map(NZ, sCTD, sJMPZ_UC);
     uHLT     : HLT port map(sCTD, sHLT);
 
-    
-    barr_ctrl <= sNOP       when dec2uc = "10000000000" else (others  => 'Z');
-    barr_ctrl <= sSTA       when dec2uc = "01000000000" else (others  => 'Z');
-    barr_ctrl <= sLDA       when dec2uc = "00100000000" else (others  => 'Z');  
-    barr_ctrl <= sADD       when dec2uc = "00010000000" else (others  => 'Z'); 
-    barr_ctrl <= sOR_UC     when dec2uc = "00001000000" else (others  => 'Z');  
-    barr_ctrl <= sAND_UC    when dec2uc = "00000100000" else (others  => 'Z');
-    barr_ctrl <= sNOT_UC    when dec2uc = "00000010000" else (others  => 'Z');
-    barr_ctrl <= sJMP_UC    when dec2uc = "00000001000" else (others  => 'Z');
-    barr_ctrl <= sJMPN_UC   when dec2uc = "00000000100" else (others  => 'Z');
-    barr_ctrl <= sJMPZ_UC   when dec2uc = "00000000010" else (others  => 'Z');
-    barr_ctrl <= sHLT       when dec2uc = "00000000001" else (others  => 'Z');
+    barr_ctrl <= sNOP when dec2uc = "10000000000" else
+    sSTA when dec2uc = "01000000000" else
+    sLDA when dec2uc = "00100000000" else
+    sADD when dec2uc = "00010000000" else
+    sAND_UC when dec2uc = "00001000000" else
+    sOR_UC when  dec2uc = "00000100000" else
+    sNOT_UC when dec2uc = "00000010000" else
+    sJMP_UC when dec2uc = "00000001000" else
+
+    sJMP_UC when dec2uc = ("00000000100") and (NZ(1) = '1') else    
+    sJMPN_UC  when dec2uc = ("00000000100") and (NZ(1) = '0') else 
+
+    sJMP_UC when dec2uc = ("00000000010") and (NZ(0) = '1') else
+    sJMPZ_UC when dec2uc = ("00000000010") and (NZ(0) = '0') else
+    sHLT when dec2uc = "00000000001" else (others => 'Z');
 
 end arch ; -- arch
 
