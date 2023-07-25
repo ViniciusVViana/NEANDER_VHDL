@@ -53,6 +53,7 @@ architecture decora of memoria is
 begin
     interface_barramento <= s_rdm2barr when MEM_nrw = '0'
         else (others => 'Z');
+        
     s_mem2rdm <= interface_barramento when MEM_nrw = '1'
         else (others => 'Z');
 

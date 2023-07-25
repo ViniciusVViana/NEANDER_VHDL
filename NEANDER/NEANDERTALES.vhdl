@@ -59,10 +59,23 @@ begin
 
     sNcl   <= ncl;
     sNclck <= Nclck;
+
+    --BIT 10 = NBARR/INC
+    --BIT 09 = NBARR/PC
+    --BIT 08-07-06 = ULA_OP
+    --BIT 05 = PC_NRW
+    --BIT 04 = AC_NRW
+    --BIT 03 = MEM_NRW
+    --BIT 02 = REM_NRW
+    --BIT 01 = RDM_NRW
+    --BIT 00 = RI_NRW
     
     u_Npc : PC port map(barramento_data_ins, barramento_ctrl(10), barramento_ctrl(5), sNcl, sNclck, sendout);
+
     u_Nmem : memoria port map(sNcl, sNclck, barramento_ctrl(9), barramento_ctrl(2), barramento_ctrl(3), barramento_ctrl(1), sendout, barramento_data_ins, barramento_data_ins);
+
     u_Nctrtl : moduloCTRL port map(barramento_data_ins, sNflags, barramento_ctrl(0), sNcl, sNclck, barramento_ctrl);
+
     u_Nula : moduloULA port map(barramento_data_ins, barramento_ctrl(8 downto 6), barramento_ctrl(4), sNflags, barramento_ctrl(3), sNcl, sNclck);
 
 end architecture;
